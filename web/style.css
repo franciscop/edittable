@@ -1,0 +1,172 @@
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css';
+
+.fa {
+  font: inherit;
+}
+
+.fa::before {
+  font: normal normal normal 16px/1 FontAwesome;
+  margin-right: 10px;
+}
+
+
+html {
+  background-color: #edce9e;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body {
+  background: #fff;
+  width: 100%;
+  max-width: 900px;
+  margin: 50px auto;
+  height: auto;
+  padding: 30px;
+}
+
+@media all and (max-width: 700px) {
+  main {
+    padding: 10px;
+  }
+}
+
+nav {
+  position: static;
+  background: none;
+  box-shadow: none;
+  height: 5em;
+  text-align: center;
+}
+
+nav .fa {
+  margin: 1em;
+  padding: 0;
+}
+
+nav .fa::before {
+  display: inline-block;
+  font-size: 2.5em;
+  line-height: 2em;
+  height: 2em;
+  width: 2em;
+  text-align: center;
+  margin: 0;
+  color: #fff;
+  transition: all .3s ease;
+}
+
+nav .fa.pseudo.button::before {
+  color: #ddd;
+}
+
+nav .fa.pseudo.button:hover::before,
+nav .fa.pseudo.button:active::before,
+nav .fa.pseudo.button:focus::before {
+  box-shadow: 0 0 #fff;
+  color: #fff;
+}
+
+nav .fa.pseudo.button.active::before {
+  color: #fff;
+}
+
+nav .pseudo.button {
+  border-radius: 0;
+  transition: all .6s ease;
+  box-shadow: 0 0 #fff;
+}
+
+nav .pseudo.button:hover,
+nav .pseudo.button:active,
+nav .pseudo.button:focus {
+  outline: none;
+  box-shadow: 0 5px #fff;
+}
+
+nav .pseudo.button.active {
+  box-shadow: 0 5px #fff;
+}
+
+.fa:empty::before {
+  margin-right: 0;
+}
+
+
+
+h2 {
+  padding: 0;
+}
+
+label p {
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
+
+form .error {
+  background: rgba(255, 150, 150, 0.6);
+  padding: 0 15px;
+  transform: scaleY(0);
+  transition: all .3s ease;
+}
+
+form .error.active {
+  transform: scaleY(1);
+  padding: 10px 15px;
+}
+
+.container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  padding: .3em .6em;
+}
+
+td.flex > * {
+  padding-bottom: 0;
+}
+
+td select {
+  min-width: 120px;
+}
+
+.picker th {
+  background: none;
+}
+
+.picker__button--today,
+.picker__button--clear,
+.picker__button--close {
+  border: 0;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.map-plan {
+  height: 400px;
+  margin-bottom: 20px;
+}
+
+
+
+
+@media print {
+  * {
+    margin: 0!important;
+  }
+  .noprint,
+  .map-plan,
+  .filter,
+  nav,
+  button, .button,
+  tfoot {
+    display: none;
+  }
+}

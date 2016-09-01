@@ -1,0 +1,105 @@
+.edittable {
+  border-collapse: collapse;
+  border: 3px solid #eee;
+  border-spacing: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.1em;
+  line-height: 1.5;
+  background: #fff;
+}
+
+
+/* Cells */
+.edittable th {
+  text-align: left;
+  background: #eee;
+  padding: .5em .6em;
+}
+
+.edittable td {
+  padding: .3em .6em;
+}
+
+.edittable td.actions {
+  padding: .3em;
+}
+
+.edittable input,
+.edittable select {
+  border: 3px solid #eee;
+  padding: .3em .5em;
+  font-size: inherit;
+  width: 90%;
+  background: #fff;
+  transition: all .2s ease;
+}
+
+.edittable input:focus,
+.edittable select:focus {
+  border: 3px solid #bdf;
+}
+
+.edittable input.error,
+.edittable select.error {
+  border: 3px solid #fbb;
+}
+
+
+
+/* Actions */
+.edittable .actions {
+  white-space: nowrap;
+}
+
+.edittable button,
+.edittable .button {
+  padding: .2em .8em;
+  margin-right: .3em;
+  border: 3px solid #eee;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 0;
+  transition: all .2s ease;
+}
+
+.edittable button:last-child,
+.edittable .button:last-child {
+  margin-right: 0;
+}
+
+.edittable button::before,
+.edittable .button::before {
+  color: #666;
+  transition: all .2s ease;
+}
+
+.edittable button:active::before,
+.edittable .button:active::before {
+  color: #000;
+}
+
+.edittable button:hover,
+.edittable .button:hover {
+  background-color: #eee;
+}
+
+.edittable .edit,
+.edittable .save {
+  border: 3px solid #def;
+}
+
+.edittable .edit:hover,
+.edittable .save:hover {
+  background-color: #def;
+}
+
+.edittable .delete,
+.edittable .cancel {
+  border: 3px solid #fdd;
+}
+
+.edittable .delete:hover,
+.edittable .cancel:hover {
+  outline: none;
+  background-color: #fdd;
+}
