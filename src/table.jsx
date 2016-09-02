@@ -73,7 +73,7 @@ class ContentRow extends React.Component {
       <tr key={('item-' + this.state.data.id)}>
         {Object.values(this.props.fields).map(field =>
           <td key={(field.name + '-' + this.state.data.id)}>
-            {this.state.edit ? (
+            {this.state.edit && !field.readonly ? (
               <Field field={field} value={this.state.data[field.name]} onChange={this.change.bind(this, field)} />
             ) : (
               (parseData.call(this, this.state.data[field.name], field.display, v => v))

@@ -22111,7 +22111,7 @@
 	          return _react2.default.createElement(
 	            'td',
 	            { key: field.name + '-' + _this2.state.data.id },
-	            _this2.state.edit ? _react2.default.createElement(_field2.default, { field: field, value: _this2.state.data[field.name], onChange: _this2.change.bind(_this2, field) }) : _helpers.parseData.call(_this2, _this2.state.data[field.name], field.display, function (v) {
+	            _this2.state.edit && !field.readonly ? _react2.default.createElement(_field2.default, { field: field, value: _this2.state.data[field.name], onChange: _this2.change.bind(_this2, field) }) : _helpers.parseData.call(_this2, _this2.state.data[field.name], field.display, function (v) {
 	              return v;
 	            })
 	          );
