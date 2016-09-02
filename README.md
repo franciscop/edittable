@@ -2,6 +2,8 @@
 
 A simple React table to edit tabular data either with a REST API or through variables and functions:
 
+![Example of the table](/web/example.png?raw=true)
+
 
 
 ## Examples:

@@ -39,6 +39,10 @@
   border: 3px solid #bdf;
 }
 
+.edittable td.error {
+  background: #fbb;
+}
+
 .edittable input.error,
 .edittable select.error {
   border: 3px solid #fbb;

@@ -6,12 +6,10 @@ class DemoTable extends React.Component {
   constructor(){
     super();
     this.state = { data: [
-      { id: '1', name: 'Test1', email: 'test1@test.com', choose: 'a', location: { text: 'Bla', id: 1 } },
-      { id: '2', name: 'Test2', email: 'test2@test.com', choose: 'b', location: { text: 'Bla', id: 2 } },
-      { id: '3', name: 'Test3', email: 'test3@test.com', choose: 'a', location: { text: 'Bla', id: 3 } },
-      { id: '4', name: 'Test4', email: 'test4@test.com', choose: 'c', location: { text: 'Bla', id: 4 } },
-      { id: '5', name: 'Test5', email: 'test5@test.com', choose: 'c', location: { text: 'Bla', id: 5 } },
-      { id: '6', name: 'Test6', email: 'test6@test.com', choose: 'b', location: { text: 'Bla', id: 6 } },
+      { name: 'Test1', email: 'test1@test.com', choose: 'First', location: { text: 'Valencia, Spain', id: 1 } },
+      { name: 'Test2', email: 'test2@test.com', choose: 'Second', location: { text: 'Tokyo, Japan', id: 2 } },
+      { name: 'Test3', email: 'test3@test.com', choose: 'First', location: { text: 'London, UK', id: 3 } },
+      { name: 'Test4', email: 'test4@test.com', choose: 'Third', location: { text: 'San Francisco, USA', id: 4 } },
     ]};
   }
 
@@ -22,15 +20,18 @@ class DemoTable extends React.Component {
 
   render () {
     var fields = {
-      id: { title: 'Id', readonly: true, display: (value, callback, self) => {
-        var id = self.state.data.id.match(/\d+/);
-        // callback(id ? id[0] : '')
-        return id ? id[0] : '';
+      id: { header: 'Id', readonly: true, display: (value, callback, self) => {
+        var name = self.state.data.name;
+        return name && name.match ? name.match(/\d+/)[0] : '-';
       } },
-      name: 'Name *',
-      email: { title: 'Email *', type: 'email' },
-      choose: { title: 'Choose *', type: 'select', options: ['a', 'b', 'c'] },
-      location: { title: 'Location', type: 'location', extract: 'text' }
+      name: { header: 'Name *' },
+      email: { header: 'Email *', type: 'email' },
+      choose: { header: 'Choose *', type: 'select', options: {
+        first: 'First',
+        second: 'Second',
+        third: 'Third'
+      } },
+      location: { header: 'Location', type: 'location', extract: 'text' }
     };
 
     var data = this.state.data;

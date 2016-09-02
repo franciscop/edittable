@@ -1,13 +1,15 @@
-var verbose = false;
+var verbose = true;
 
 // Parse the data for displaying each field
 export function parseData(data, extract, callback){
 
+  if (extract)
+    return typeof extract === 'string' ?
+      callback(data[extract]) :
+      extract.call(this, data, callback, this);
+
   if (!data)
     return callback('');
-
-  if (extract)
-    return typeof extract === 'string' ? callback(data[extract]) : extract.call(this, data, callback, this);
 
   if (typeof data === 'string')
     return callback(data);
@@ -15,8 +17,8 @@ export function parseData(data, extract, callback){
   if (data && data.text)
     return callback(data.text);
 
-  throw new Error('The data is malformed, it should be a string, an object with the property "text"' +
-    ' or you should define how to show it with "field.display"');
+  throw new Error('The data is malformed, it should be a string, an object with ' +
+    'the property "text" or you should define how to show it with "field.display"');
 }
 
 // Parse each field and inflate it

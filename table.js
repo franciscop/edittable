@@ -77,7 +77,7 @@
 	
 	    var _this = _possibleConstructorReturn(this, (DemoTable.__proto__ || Object.getPrototypeOf(DemoTable)).call(this));
 	
-	    _this.state = { data: [{ id: '1', name: 'Test1', email: 'test1@test.com', choose: 'a', location: { text: 'Bla', id: 1 } }, { id: '2', name: 'Test2', email: 'test2@test.com', choose: 'b', location: { text: 'Bla', id: 2 } }, { id: '3', name: 'Test3', email: 'test3@test.com', choose: 'a', location: { text: 'Bla', id: 3 } }, { id: '4', name: 'Test4', email: 'test4@test.com', choose: 'c', location: { text: 'Bla', id: 4 } }, { id: '5', name: 'Test5', email: 'test5@test.com', choose: 'c', location: { text: 'Bla', id: 5 } }, { id: '6', name: 'Test6', email: 'test6@test.com', choose: 'b', location: { text: 'Bla', id: 6 } }] };
+	    _this.state = { data: [{ name: 'Test1', email: 'test1@test.com', choose: 'First', location: { text: 'Valencia, Spain', id: 1 } }, { name: 'Test2', email: 'test2@test.com', choose: 'Second', location: { text: 'Tokyo, Japan', id: 2 } }, { name: 'Test3', email: 'test3@test.com', choose: 'First', location: { text: 'London, UK', id: 3 } }, { name: 'Test4', email: 'test4@test.com', choose: 'Third', location: { text: 'San Francisco, USA', id: 4 } }] };
 	    return _this;
 	  }
 	
@@ -91,15 +91,18 @@
 	    key: 'render',
 	    value: function render() {
 	      var fields = {
-	        id: { title: 'Id', readonly: true, display: function display(value, callback, self) {
-	            var id = self.state.data.id.match(/\d+/);
-	            // callback(id ? id[0] : '')
-	            return id ? id[0] : '';
+	        id: { header: 'Id', readonly: true, display: function display(value, callback, self) {
+	            var name = self.state.data.name;
+	            return name && name.match ? name.match(/\d+/)[0] : '-';
 	          } },
-	        name: 'Name *',
-	        email: { title: 'Email *', type: 'email' },
-	        choose: { title: 'Choose *', type: 'select', options: ['a', 'b', 'c'] },
-	        location: { title: 'Location', type: 'location', extract: 'text' }
+	        name: { header: 'Name *' },
+	        email: { header: 'Email *', type: 'email' },
+	        choose: { header: 'Choose *', type: 'select', options: {
+	            first: 'First',
+	            second: 'Second',
+	            third: 'Third'
+	          } },
+	        location: { header: 'Location', type: 'location', extract: 'text' }
 	      };
 	
 	      var data = this.state.data;
@@ -22019,6 +22022,29 @@
 	
 	var verbose = false;
 	
+	function Actions(props) {
+	  switch (props.type) {
+	    case 'edit':
+	      return _react2.default.createElement(
+	        'td',
+	        { className: 'actions' },
+	        _react2.default.createElement('button', { className: 'save fa fa-upload', onClick: props.actions.update }),
+	        _react2.default.createElement('button', { className: 'cancel fa fa-times', onClick: props.actions.cancel })
+	      );
+	      break;
+	    case 'display':
+	      return _react2.default.createElement(
+	        'td',
+	        { className: 'actions' },
+	        _react2.default.createElement('button', { className: 'edit fa fa-pencil', onClick: props.actions.edit }),
+	        _react2.default.createElement('button', { className: 'delete fa fa-trash', onClick: props.actions.remove })
+	      );
+	      break;
+	    default:
+	      console.log("No actions of that type");
+	  }
+	}
+	
 	var ContentRow = function (_React$Component) {
 	  _inherits(ContentRow, _React$Component);
 	
@@ -22061,25 +22087,6 @@
 	      this.setState({ edit: false });
 	    }
 	  }, {
-	    key: 'getActions',
-	    value: function getActions() {
-	      if (this.state.edit) {
-	        return _react2.default.createElement(
-	          'td',
-	          { className: 'actions' },
-	          _react2.default.createElement('button', { className: 'save fa fa-upload', onClick: this.update.bind(this) }),
-	          _react2.default.createElement('button', { className: 'cancel fa fa-times', onClick: this.cancel.bind(this) })
-	        );
-	      } else {
-	        return _react2.default.createElement(
-	          'td',
-	          { className: 'actions' },
-	          _react2.default.createElement('button', { className: 'edit fa fa-pencil', onClick: this.edit.bind(this) }),
-	          _react2.default.createElement('button', { className: 'delete fa fa-trash', onClick: this.props.remove.bind(this, this.state.data.id) })
-	        );
-	      }
-	    }
-	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.setState({ data: this.props.entry });
@@ -22091,6 +22098,12 @@
 	
 	      var tableRow = [];
 	      var print = true;
+	      var actions = {
+	        update: this.update.bind(this),
+	        cancel: this.cancel.bind(this),
+	        edit: this.edit.bind(this),
+	        remove: this.props.remove.bind(this, this.state.data.id)
+	      };
 	      return _react2.default.createElement(
 	        'tr',
 	        { key: 'item-' + this.state.data.id },
@@ -22103,7 +22116,7 @@
 	            })
 	          );
 	        }),
-	        this.getActions()
+	        _react2.default.createElement(Actions, { type: this.state.edit ? 'edit' : 'display', actions: actions })
 	      );
 	    }
 	  }]);
@@ -22124,7 +22137,7 @@
 	        return _react2.default.createElement(
 	          'th',
 	          { key: 'head-' + field.name },
-	          field.title
+	          field.header
 	        );
 	      }),
 	      _react2.default.createElement(
@@ -22178,8 +22191,10 @@
 	  _createClass(TableFoot, [{
 	    key: 'add',
 	    value: function add() {
-	      this.props.add(this.state.data);
-	      this.setState({ data: {} });
+	      var self = this;
+	      this.props.add(this.state.data, function (err, res) {
+	        self.setState({ data: {} });
+	      });
 	    }
 	  }, {
 	    key: 'change',
@@ -22193,13 +22208,18 @@
 	    value: function render() {
 	      var _this6 = this;
 	
+	      if (this.state.error) {
+	        console.log("Error saving the data: ", this.state.error);
+	      }
+	      var fields = this.props.fields;
+	      var error = this.state.error;
 	      return _react2.default.createElement(
 	        'tfoot',
 	        null,
 	        _react2.default.createElement(
 	          'tr',
 	          null,
-	          Object.values(this.props.fields).map(function (field) {
+	          Object.values(fields).map(function (field) {
 	            return _react2.default.createElement(
 	              'td',
 	              { key: 'new-' + field.name },
@@ -22228,20 +22248,25 @@
 	    var _this7 = _possibleConstructorReturn(this, (EditTable.__proto__ || Object.getPrototypeOf(EditTable)).call(this, props));
 	
 	    _this7.state = {
-	      data: props.data || [],
-	      error: false
+	      data: props.data || []
 	    };
 	    return _this7;
 	  }
 	
 	  _createClass(EditTable, [{
+	    key: 'error',
+	    value: function error(err) {
+	      console.log(err);
+	      alert(err);
+	    }
+	  }, {
 	    key: 'add',
-	    value: function add(row) {
+	    value: function add(row, callback) {
 	      var data = this.state.data;
 	      data.push(row);
 	      this.setState({ data: data });
 	      if (this.props.update) this.props.update(this.state.data);
-	      api.post('/' + this.props.name, data);
+	      _api2.default.post(data, callback);
 	    }
 	  }, {
 	    key: 'update',
@@ -22254,7 +22279,7 @@
 	      data[index] = entry;
 	      this.setState({ data: data });
 	      if (this.props.update) this.props.update(this.state.data);
-	      api.put('/' + this.props.name + '/' + data.id, data, function () {
+	      _api2.default.put('/' + this.props.name + '/' + data.id, data, function () {
 	        console.log("Done!", arguments);
 	      }, function () {
 	        console.log("Error!", arguments);
@@ -22272,7 +22297,7 @@
 	      if (index === -1) throw new Error("That element is not in the dataset");
 	      this.setState({ data: data.splice(index, 1) && data });
 	      if (this.props.update) this.props.update(this.state.data);
-	      api.delete('/' + this.props.name + '/' + id, function () {
+	      _api2.default.delete('/' + this.props.name + '/' + id, function () {
 	        return console.log("Error!", _arguments);
 	      });
 	    }
@@ -22301,8 +22326,8 @@
 	        'table',
 	        { className: 'edittable' },
 	        _react2.default.createElement(TableHead, { fields: fields }),
-	        _react2.default.createElement(TableBody, { data: this.state.data || [], fields: this.props.fields, update: this.update.bind(this), remove: this.remove.bind(this) }),
-	        _react2.default.createElement(TableFoot, { name: this.props.name, fields: this.props.fields, add: this.add.bind(this) })
+	        _react2.default.createElement(TableBody, { data: this.state.data || [], fields: this.props.fields, update: this.update.bind(this), remove: this.remove.bind(this), error: this.props.error || this.error }),
+	        _react2.default.createElement(TableFoot, { name: this.props.name, fields: this.props.fields, add: this.add.bind(this), error: this.props.error || this.error })
 	      );
 	    }
 	  }]);
@@ -22590,20 +22615,20 @@
 	});
 	exports.parseData = parseData;
 	exports.parseFields = parseFields;
-	var verbose = false;
+	var verbose = true;
 	
 	// Parse the data for displaying each field
 	function parseData(data, extract, callback) {
 	
-	  if (!data) return callback('');
-	
 	  if (extract) return typeof extract === 'string' ? callback(data[extract]) : extract.call(this, data, callback, this);
+	
+	  if (!data) return callback('');
 	
 	  if (typeof data === 'string') return callback(data);
 	
 	  if (data && data.text) return callback(data.text);
 	
-	  throw new Error('The data is malformed, it should be a string, an object with the property "text"' + ' or you should define how to show it with "field.display"');
+	  throw new Error('The data is malformed, it should be a string, an object with ' + 'the property "text" or you should define how to show it with "field.display"');
 	}
 	
 	// Parse each field and inflate it
@@ -22660,57 +22685,41 @@
 	  value: true
 	});
 	// Full API overwrite
-	var api = exports.api = {
+	var api = {
 	  url: '/api/users',
 	  auth: function auth(data, callback) {
 	    data = data || {};
 	    if (this.token) data.token = this.token;
 	    callback(data);
 	  },
-	  get: function get(callback) {
-	    var url = this.url;
+	  ajax: function ajax(url, method, data, callback) {
 	    var self = this;
 	    callback = callback || function () {};
-	    this.auth({}, function (dataAuth) {
-	      $.get(url, dataAuth, callback.bind(self, null));
+	    this.auth(data, function (dataAuth) {
+	      $.ajax({
+	        url: url,
+	        data: dataAuth,
+	        type: method,
+	        success: callback.bind(self, null),
+	        error: callback.bind(self)
+	      });
 	    });
+	  },
+	  get: function get(callback) {
+	    this.ajax(this.url, 'GET', {}, callback);
 	  },
 	  post: function post(data, callback) {
-	    var self = this;
-	    callback = callback || function () {};
-	    this.auth(data, function (dataAuth) {
-	      $.post(this.url, dataAuth, callback.bind(self, null));
-	    });
+	    this.ajax(this.url, 'POST', data, callback);
 	  },
 	  put: function put(id, data, callback) {
-	    var url = this.url + '/' + id;
-	    var self = this;
-	    callback = callback || function () {};
-	    this.auth(data, function (dataAuth) {
-	      $.ajax({
-	        url: url,
-	        data: dataAuth,
-	        type: 'PUT',
-	        success: callback.bind(self, null),
-	        error: callback.bind(self)
-	      });
-	    });
+	    this.ajax(this.url + '/' + id, 'PUT', data, callback);
 	  },
 	  delete: function _delete(id, callback) {
-	    var url = this.url + '/' + id;
-	    var self = this;
-	    callback = callback || function () {};
-	    this.auth({}, function (dataAuth) {
-	      $.ajax({
-	        url: url,
-	        data: dataAuth,
-	        type: 'DELETE',
-	        success: callback.bind(self, null),
-	        error: callback.bind(self)
-	      });
-	    });
+	    this.ajax(this.url + '/' + id, 'DELETE', {}, callback);
 	  }
 	};
+	
+	exports.default = api;
 
 /***/ }
 /******/ ]);

@@ -1,9 +1,35 @@
 import React from 'react';
 import Field from './field.jsx';
 import { parseData, parseFields } from './helpers.js';
-import API from './api.js';
+import api from './api.js';
 
 var verbose = false;
+
+
+function Actions(props) {
+  switch(props.type){
+    case 'edit':
+      return (
+        <td className="actions">
+          <button className="save fa fa-upload" onClick={props.actions.update}/>
+          <button className="cancel fa fa-times" onClick={props.actions.cancel}/>
+        </td>
+      );
+      break;
+    case 'display':
+      return (
+        <td className="actions">
+          <button className="edit fa fa-pencil" onClick={props.actions.edit}></button>
+          <button className="delete fa fa-trash" onClick={props.actions.remove}></button>
+        </td>
+      );
+      break;
+    default:
+      console.log("No actions of that type");
+  }
+}
+
+
 
 class ContentRow extends React.Component {
   constructor(props){
@@ -31,29 +57,18 @@ class ContentRow extends React.Component {
     this.props.update(this.state.data);
     this.setState({ edit: false });
   }
-  getActions(){
-    if (this.state.edit) {
-      return (
-        <td className="actions">
-          <button className="save fa fa-upload" onClick={this.update.bind(this)}/>
-          <button className="cancel fa fa-times" onClick={this.cancel.bind(this)}/>
-        </td>
-      );
-    } else {
-      return (
-        <td className="actions">
-          <button className="edit fa fa-pencil" onClick={this.edit.bind(this)}></button>
-          <button className="delete fa fa-trash" onClick={this.props.remove.bind(this, this.state.data.id)}></button>
-        </td>
-      );
-    }
-  }
   componentDidMount(){
     this.setState({ data: this.props.entry });
   }
   render(){
     var tableRow = [];
     var print = true;
+    var actions = {
+      update: this.update.bind(this),
+      cancel: this.cancel.bind(this),
+      edit: this.edit.bind(this),
+      remove: this.props.remove.bind(this, this.state.data.id)
+    };
     return (
       <tr key={('item-' + this.state.data.id)}>
         {Object.values(this.props.fields).map(field =>
@@ -65,7 +80,7 @@ class ContentRow extends React.Component {
             )}
           </td>
         )}
-        {this.getActions()}
+        <Actions type={this.state.edit ? 'edit' : 'display'} actions={actions} />
       </tr>
     );
   }
@@ -78,7 +93,7 @@ function TableHead({fields}){
     <thead>
       <tr>
         {Object.values(fields).map(field =>
-          <th key={('head-'+field.name)}>{field.title}</th>
+          <th key={('head-'+field.name)}>{field.header}</th>
         )}
         <th>Actions</th>
       </tr>
@@ -104,8 +119,10 @@ class TableFoot extends React.Component {
     this.state = { data: {} };
   }
   add(){
-    this.props.add(this.state.data);
-    this.setState({ data: {} });
+    var self = this;
+    this.props.add(this.state.data, function(err, res){
+      self.setState({ data: {} });
+    });
   }
   change(field, value){
     var data = this.state.data;
@@ -113,10 +130,15 @@ class TableFoot extends React.Component {
     this.setState({ data: data });
   }
   render(){
+    if (this.state.error) {
+      console.log("Error saving the data: ", this.state.error);
+    }
+    let fields = this.props.fields;
+    let error = this.state.error;
     return (
       <tfoot>
         <tr>
-          {Object.values(this.props.fields).map(field =>
+          {Object.values(fields).map(field =>
             <td key={('new-'+field.name)}>
               <Field field={field} value={this.state.data[field.name]} onChange={this.change.bind(this, field)} />
             </td>
@@ -138,16 +160,19 @@ export default class EditTable extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: props.data || [],
-      error: false
+      data: props.data || []
     };
   }
-  add(row){
+  error(err){
+    console.log(err);
+    alert(err);
+  }
+  add(row, callback){
     var data = this.state.data;
     data.push(row);
     this.setState({ data: data });
     if (this.props.update) this.props.update(this.state.data);
-    api.post('/' + this.props.name, data);
+    api.post(data, callback);
   }
   update(entry){
     var data = this.state.data;
@@ -184,8 +209,8 @@ export default class EditTable extends React.Component {
     return (
       <table className="edittable">
         <TableHead fields={fields}/>
-        <TableBody data={this.state.data || []} fields={this.props.fields} update={this.update.bind(this)} remove={this.remove.bind(this)} />
-        <TableFoot name={this.props.name} fields={this.props.fields} add={this.add.bind(this)} />
+        <TableBody data={this.state.data || []} fields={this.props.fields} update={this.update.bind(this)} remove={this.remove.bind(this)} error={this.props.error || this.error} />
+        <TableFoot name={this.props.name} fields={this.props.fields} add={this.add.bind(this)} error={this.props.error || this.error} />
       </table>
     );
   }
