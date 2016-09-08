@@ -22,7 +22,8 @@ class DemoTable extends React.Component {
     var fields = {
       id: { header: 'Id', readonly: true, display: (value, callback, self) => {
         var name = self.state.data.name;
-        return name && name.match ? name.match(/\d+/)[0] : '-';
+        var matched = name && name.match ? name.match(/\d+/) : null;
+        return matched ? matched[0] : '-';
       } },
       name: { header: 'Name *' },
       email: { header: 'Email *', type: 'email' },
