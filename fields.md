@@ -207,14 +207,14 @@ var fields = {
 
 There are many field types, some basic ones and some complex ones. The basic ones compile into an <input> with some lax properties, while the advanced ones include external APIs and make wonders. You can of course include your own fields.
 
-- `text`
-- `email`
-- `password`
-- `select`
-- `location`
-- `date`
-- `time` (not yet)
-- `<YourOwn />`
+- [`text`](#text)
+- [`email`](#email)
+- [`password`](#password)
+- [`select`](#select)
+- [`location`](#location)
+- [`date`](#date)
+- [`time` (not yet)](#time)
+- [`<YourOwn />`](#yourown)
 
 ### text
 
