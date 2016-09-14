@@ -177,11 +177,11 @@ A way to manipulate the data in case we want to display it differently than the 
 ```js
 var data = [
   {
-    manager: { nickname: 'nick1', ... },
+    manager: { nickname: 'nick1', email: 'nick1@test.com', ... },
     location: { text: 'London, UK', city: 'London', ... }
   },
   {
-    manager: { nickname: 'nick2', ... },
+    manager: { nickname: 'nick2', email: 'nick2@test.com', ... },
     location: { text: 'Tokyo, Japan', city: 'Tokyo', ... }
   },
 ];
@@ -189,7 +189,7 @@ var data = [
 // Manipulate them to simplify them
 var fields = {
   manager: { header: 'Boss', display: 'nickname', readonly: true },
-  location: { header: 'City', display: 'city' }
+  location: { header: 'City' }  // Defaults to 'text', so good!
 };
 ```
 
