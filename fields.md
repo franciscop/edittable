@@ -2,14 +2,16 @@
 
 Table of Contents:
 
-1. Header
-2. Name
-3. Placeholder
-4. Required
-5. Readonly
-6. Validate
-7. Display
-8. Field Types: [`text`](#text), [`email`](#email), [`password`](#password), [`select`](#select), [`location`](#location), [`date`](#date), [`time`](#time), [`<YourOwn />`](#yourown)
+| Table of Contents |
+| ----------------- |
+| 1. Header         |
+| 2. Name           |
+| 3. Placeholder    |
+| 4. Required       |
+| 5. Readonly       |
+| 6. Validate       |
+| 7. Display        |
+| 8. Field Types: [`text`](#text), [`email`](#email), [`password`](#password), [`select`](#select), [`location`](#location), [`date`](#date), [`time`](#time), [`<YourOwn />`](#yourown) |
 
 On its simplest form, the fields is just an array:
 
