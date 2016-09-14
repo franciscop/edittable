@@ -7,7 +7,7 @@ export default class Location extends React.Component {
 
     var url = 'https://maps.googleapis.com/maps/api/js?key=' + this.props.field.key + '&libraries=places';
 
-    loadscript(url, function loadSearch(google){
+    loadscript(url, function loadSearch(){
       if (typeof google === 'undefined' || !google || !google.maps.places) {
         return console.error("Couldn't find Google");
       }
