@@ -34,7 +34,7 @@ class DemoTable extends React.Component {
         second: 'Second',
         third: 'Third'
       } },
-      location: { header: 'Location', type: 'location', extract: 'text' }
+      location: { header: 'Location', type: 'location', extract: 'text', key: 'AIzaSyCNgU9MgTGYjQISIzDxQXlHQFYSveePzko' }
     };
 
     var data = this.state.data;

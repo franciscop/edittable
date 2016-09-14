@@ -106,7 +106,7 @@
 	            second: 'Second',
 	            third: 'Third'
 	          } },
-	        location: { header: 'Location', type: 'location', extract: 'text' }
+	        location: { header: 'Location', type: 'location', extract: 'text', key: 'AIzaSyCNgU9MgTGYjQISIzDxQXlHQFYSveePzko' }
 	      };
 	
 	      var data = this.state.data;
@@ -22239,9 +22239,13 @@
 	    key: 'add',
 	    value: function add() {
 	      var self = this;
-	      this.props.add(this.state.data, function (err, res) {
-	        self.setState({ data: {} });
-	      });
+	      this.props.add(this.state.data);
+	      var dat = {};
+	      for (var key in this.state.data) {
+	        dat[key] = '';
+	      }
+	      self.setState({ data: dat });
+	      console.log("Data:", dat, self.state.data);
 	    }
 	  }, {
 	    key: 'change',
@@ -22585,10 +22589,36 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var errors = {
-	  nogoogle: "Google Maps couldn't be found. " + "You will need it to use a 'location' field type. " + "Please make sure you include it and can access the internet.",
-	  noplaces: "Google Places not found, but Google Maps loaded correctly. " + "Remember to add &libraries=places to the url when you include the library"
-	};
+	var loaded = false;
+	var loading = false;
+	
+	function loadGoogle(key, callback) {
+	  if (loading) return false;
+	  if (loaded) return callback(google);
+	  loading = true;
+	  var script = document.createElement("script");
+	  script.type = "text/javascript";
+	  script.className = 'googlemapsscript';
+	  if (script.readyState) {
+	    //IE
+	    script.onreadystatechange = function () {
+	      if (script.readyState == "loaded" || script.readyState == "complete") {
+	        script.onreadystatechange = null;
+	        loaded = true;
+	        callback(google);
+	      }
+	    };
+	  } else {
+	    // Others
+	    script.onload = function () {
+	      loaded = true;
+	      callback(google);
+	    };
+	  }
+	
+	  script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key + '&libraries=places';
+	  document.getElementsByTagName("head")[0].appendChild(script);
+	}
 	
 	var Location = function (_React$Component) {
 	  _inherits(Location, _React$Component);
@@ -22603,22 +22633,22 @@
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
 	      var self = this;
-	      if (typeof google === 'undefined' || !google) {
-	        return console.error(errors.nogoogle);
-	      }
-	      if (!google.maps.places) {
-	        return console.error(errors.noplaces);
-	      }
-	      var searchBox = new google.maps.places.SearchBox(this.input_text);
-	      // When the user selects one of the locations
-	      searchBox.addListener('places_changed', function () {
-	        var places = searchBox.getPlaces();
-	        if (places.length == 0) return self.props.onChange();
-	        self.props.onChange({
-	          id: places[0].place_id,
-	          text: places[0].formatted_address
+	
+	      loadGoogle(this.props.field.key, function loadSearch(google) {
+	        if (typeof google === 'undefined' || !google || !google.maps.places) {
+	          return console.error("Couldn't find Google");
+	        }
+	        var searchBox = new google.maps.places.SearchBox(self.input_text);
+	        // When the user selects one of the locations
+	        searchBox.addListener('places_changed', function () {
+	          var places = searchBox.getPlaces();
+	          if (places.length == 0) return self.props.onChange();
+	          self.props.onChange({
+	            id: places[0].place_id,
+	            text: places[0].formatted_address
+	          });
+	          self.input_id.value = places[0].place_id;
 	        });
-	        $(self.input_id).get(0).value = places[0].place_id;
 	      });
 	    }
 	  }, {

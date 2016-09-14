@@ -120,9 +120,13 @@ class TableFoot extends React.Component {
   }
   add(){
     var self = this;
-    this.props.add(this.state.data, function(err, res){
-      self.setState({ data: {} });
-    });
+    this.props.add(this.state.data);
+    var dat = {};
+    for (var key in this.state.data) {
+      dat[key] = '';
+    }
+    self.setState({ data: dat });
+    console.log("Data:", dat, self.state.data);
   }
   change(field, value){
     var data = this.state.data;

@@ -193,7 +193,7 @@ var fields = {
 };
 ```
 
-> Note: when the data value is an object, it defaults to `text` so if `display` was omitted  above it would default to `display: 'text'`
+> Note: when the data value is an object, it defaults to `text` if present and error if not
 
 It can also be a function, so it will manipulate the whole field. Let's say we want to display only the end of a hash:
 
@@ -353,10 +353,31 @@ Then to use it, the field should have this format:
 
 ```js
 var fields = {
-  address: { type: 'location', display: 'text' }
+  address: { type: 'location', key: 'YOUR_GOOGLE_PLACES_API_KEY' }
 };
 ```
 
+> You **should** pass the Google API Key or it won't work
+
+Then everything works on its own. When the user edits the field, a Google Places dropdown allows to choose the city and the field is updated with the two properties, the text and the id of the new place that the user chose:
+
+```js
+var newData = {
+  address: {
+    text: 'London, UK', id: 'ChIJdd4hrwug2EcRmSrV3Vo6llI'
+  }
+};
+```
+
+Note that it could be only a text if the user never chooses from the dropdown and just writes the location manually:
+
+```js
+var newData = {
+  address: {
+    text: 'London, UK', id: ''
+  }
+};
+```
 
 
 
