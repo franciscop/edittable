@@ -9,7 +9,7 @@ Table of Contents:
 5. Readonly
 6. Validate
 7. Display
-8. Field Types: `text` (default), `email`, `password`, `select`, `location`, `date`, `time`, `<YourOwn />`
+8. Field Types: [`text`](#text), [`email`](#email), [`password`](#password), [`select`](#select), [`location`](#location), [`date`](#date), [`time`](#time), `<YourOwn />`
 
 On its simplest form, the fields is just an array:
 
@@ -201,11 +201,11 @@ var fields = {
 ```
 
 
-## Field type `field.type = 'text'`
+## Field types
 
 There are many field types, some basic ones and some complex ones. The basic ones compile into an <input> with some lax properties, while the advanced ones include external APIs and make wonders. You can of course include your own fields.
 
-- `text` (default)
+- `text`
 - `email`
 - `password`
 - `select`
@@ -214,7 +214,7 @@ There are many field types, some basic ones and some complex ones. The basic one
 - `time` (not yet)
 - `<YourOwn />`
 
-### text (default)
+### text
 
 If you don't include the `type` property inside a field, it will be assumed as `text` and a single `<input type="text">` will be rendered.
 
@@ -313,3 +313,6 @@ This options parameter accepts several forms:
       <option value="banana">Sweet banana</option>
     </select>
     ```
+
+
+### <YourOwn />
