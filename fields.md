@@ -9,15 +9,7 @@ Table of Contents:
 5. Readonly
 6. Validate
 7. Display
-8. Field Types
-  - `text` (default)
-  - `email`
-  - `password`
-  - `select`
-  - `location`
-  - `date`
-  - `time` (not yet)
-  - `<YourOwn />`
+8. Field Types: `text` (default), `email`, `password`, `select`, `location`, `date`, `time`, `<YourOwn />`
 
 On its simplest form, the fields is just an array:
 
