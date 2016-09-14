@@ -71,7 +71,7 @@ var fields = {
 };
 ```
 
-[![Fields Documentation](web/images/fields_button.png))(fields.md)
+[![Fields Documentation](web/images/fields_button.png)](fields.md)
 
 On its simplest form, the fields is just an array:
 
