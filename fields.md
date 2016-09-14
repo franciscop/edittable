@@ -178,11 +178,11 @@ A way to manipulate the data in case we want to display it differently than the 
 var data = [
   {
     manager: { nickname: 'nick1', email: 'nick1@test.com', ... },
-    location: { text: 'London, UK', city: 'London', ... }
+    location: { text: 'London, UK', city: 'London', country: 'UK' }
   },
   {
     manager: { nickname: 'nick2', email: 'nick2@test.com', ... },
-    location: { text: 'Tokyo, Japan', city: 'Tokyo', ... }
+    location: { text: 'Tokyo, Japan', city: 'Tokyo', country: 'Japan' }
   },
 ];
 
