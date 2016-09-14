@@ -22297,6 +22297,7 @@
 	    _this7.state = { data: props.data || [] };
 	    _this7.api = props.api || _api2.default;
 	    _this7.api.url = props.url || props.name || '/';
+	    _this7.api.token = props.token || false;
 	    return _this7;
 	  }
 	

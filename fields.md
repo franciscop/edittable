@@ -1,5 +1,23 @@
 # Fields
 
+Table of Contents:
+
+1. Header
+2. Name
+3. Placeholder
+4. Required
+5. Readonly
+6. Validate
+7. Display
+8. Field Types
+  - `text` (default)
+  - `email`
+  - `password`
+  - `select`
+  - `location`
+  - `date`
+  - `time` (not yet)
+  - `<YourOwn />`
 
 On its simplest form, the fields is just an array:
 
@@ -16,7 +34,7 @@ var data = [
 ];
 ```
 
-However let's say we want to change the header (and placeholder) texts:
+However let's say we want to change the header (and placeholder) texts. Then we'll use a simple object:
 
 ```js
 var fields = {
@@ -37,121 +55,6 @@ var fields = {
   password: { header: 'Password', type: 'password' }
 }
 ```
-
-Awesome, now it's working properly. Let's move to see what field types are there.
-
-## Field type `field.type = text`
-
-There are many field types, some basic ones and some complex ones. The basic ones compile into an <input> with some lax properties, while the advanced ones include external APIs and make wonders. You can of course include your own fields.
-
-- `text` (default)
-- `email`
-- `password`
-- `select`
-- `location`
-- `date`
-- `time` (not yet)
-
-### default
-
-If you don't include the `type` property inside a field, it will be assumed as `text` and a single `<input type="text">` will be rendered.
-
-```js
-var fields = {
-  name: 'Name',
-  name: { header: 'Name', type: 'text' }  // Exactly the same
-};
-```
-
-### email
-
-If it's not empty it will be validated as an email.
-
-```js
-var fields = {
-  email: { header: 'Email', type: 'email' }
-};
-```
-
-### password
-
-This is a bit more complex, since it will display as `******` when we are displaying it and it will be an empty field with the type="password" when we edit it.
-
-```js
-var fields = {
-  password: { header: 'Password', type: 'password' }
-};
-```
-
-```html
-<input type="password" placeholder="******" />
-```
-
-> By default it shows ****** as placeholder, not the `header` as other fields do. This is to show that the password will be hidden while typing
-
-You can change the default placeholder as expected by passing the placeholder parameter:
-
-```js
-var fields = {
-  password: { header: 'Password', type: 'password', placeholder: '**********' }
-};
-```
-
-### select
-
-Displays a dropdown with several options to choose. You *have* to assign to the field another parameter called options:
-
-```js
-var fields = {
-  choose: {
-    header: 'Choose a fruit',
-    type: 'select',
-    options: ['orange', 'mango', 'banana'],
-    defaults: 'orange'
-  }
-};
-```
-
-This options parameter accepts several forms:
-
-1. A single string that will be split and share value and text:
-
-    ```js
-    options: 'orange mango banana'
-    ```
-
-    ```html
-    <select ...>
-      <option value="orange">orange</option>
-      <option value="mango">mango</option>
-      <option value="banana">banana</option>
-    </select>
-    ```
-
-2. A simple array. It will render the same way as the text split above:
-
-    ```js
-    options: ['orange', 'mango', 'banana']
-    ```
-
-3. A simple object:
-
-    ```js
-    options: {
-      orange: 'Juicy orange',
-      mango: 'Delicious mango',
-      banana: 'Sweet banana'
-    }
-    ```
-
-    ```html
-    <select ...>
-      <option value="orange">Juicy orange</option>
-      <option value="mango">Delicious mango</option>
-      <option value="banana">Sweet banana</option>
-    </select>
-    ```
-
 
 ## Header
 
@@ -304,3 +207,117 @@ var fields = {
   }
 };
 ```
+
+
+## Field type `field.type = 'text'`
+
+There are many field types, some basic ones and some complex ones. The basic ones compile into an <input> with some lax properties, while the advanced ones include external APIs and make wonders. You can of course include your own fields.
+
+- `text` (default)
+- `email`
+- `password`
+- `select`
+- `location`
+- `date`
+- `time` (not yet)
+- `<YourOwn />`
+
+### text (default)
+
+If you don't include the `type` property inside a field, it will be assumed as `text` and a single `<input type="text">` will be rendered.
+
+```js
+var fields = {
+  name: 'Name',
+  name: { header: 'Name', type: 'text' }  // Exactly the same
+};
+```
+
+### email
+
+If it's not empty it will be validated as an email.
+
+```js
+var fields = {
+  email: { header: 'Email', type: 'email' }
+};
+```
+
+### password
+
+This is a bit more complex, since it will display as `******` when we are displaying it and it will be an empty field with the type="password" when we edit it.
+
+```js
+var fields = {
+  password: { header: 'Password', type: 'password' }
+};
+```
+
+```html
+<input type="password" placeholder="******" />
+```
+
+> By default it shows ****** as placeholder, not the `header` as other fields do. This is to show that the password will be hidden while typing
+
+You can change the default placeholder as expected by passing the placeholder parameter:
+
+```js
+var fields = {
+  password: { header: 'Password', type: 'password', placeholder: '**********' }
+};
+```
+
+### select
+
+Displays a dropdown with several options to choose. You *have* to assign to the field another parameter called options:
+
+```js
+var fields = {
+  choose: {
+    header: 'Choose a fruit',
+    type: 'select',
+    options: ['orange', 'mango', 'banana'],
+    defaults: 'orange'
+  }
+};
+```
+
+This options parameter accepts several forms:
+
+1. A single string that will be split and share value and text:
+
+    ```js
+    options: 'orange mango banana'
+    ```
+
+    ```html
+    <select ...>
+      <option value="orange">orange</option>
+      <option value="mango">mango</option>
+      <option value="banana">banana</option>
+    </select>
+    ```
+
+2. A simple array. It will render the same way as the text split above:
+
+    ```js
+    options: ['orange', 'mango', 'banana']
+    ```
+
+3. A simple object:
+
+    ```js
+    options: {
+      orange: 'Juicy orange',
+      mango: 'Delicious mango',
+      banana: 'Sweet banana'
+    }
+    ```
+
+    ```html
+    <select ...>
+      <option value="orange">Juicy orange</option>
+      <option value="mango">Delicious mango</option>
+      <option value="banana">Sweet banana</option>
+    </select>
+    ```

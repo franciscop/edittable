@@ -7,7 +7,7 @@ A simple React table to edit tabular data either with a REST API or through vari
 Another simple example:
 
 ```js
-import  EditTable from './edittable.jsx';
+import EditTable from './edittable.jsx';
 
 var data = [
   { id: '1', name: 'Test1', email: 'test1@test.com', description: 'Bla 1' },
@@ -31,7 +31,7 @@ There are many fields that can be used by default and new ones can be created ea
 
 ```js
 var fields = {
-  first: { // totally unassuming name
+  first: { // any name here
     header: 'first',       // For the table header
     name: 'first',         // The field (and data key) name
     placeholder: 'first',  // The text to show as placeholder
@@ -67,31 +67,76 @@ This format is the one expected in case you pass down the data as a property or 
 
 
 
-
 ## API
 
-By default
+By default it is a simple REST API:
+
+```js
+var api {
+  get: function(callback){
+    this.ajax(this.url, 'GET', {}, callback);
+  },
+  post: function(data, callback){
+    this.ajax(this.url, 'POST', data, callback);
+  },
+  put: function(id, data, callback){
+    this.ajax(this.url + '/' + id, 'PUT', data, callback);
+  },
+  delete: function(id, callback){
+    this.ajax(this.url + '/' + id, 'DELETE', {}, callback);
+  }
+};
+```
 
 
-## Examples:
+
+## Use Cases (Examples)
+
+Edit Table is really flexible, and while it was initially thought for a simple REST API now it's configurable deeply. Let's start with the default and easy case though:
+
+
+### REST API
 
 For a simple REST API you can pass only the url:
 
 ```js
-import { EditTable } from './edittable.jsx';
+import EditTable from './edittable.jsx';
 
 class SimpleApi extends React.Component {
   render () {
     var fields = { name: 'Name *', email: 'Email *', description: 'Description' };
-    return <EditTable name="users" url="/api/users" fields={fields} />;
+    return <EditTable url="/api/users" fields={fields} />;
   }
 }
 ```
 
-For local data manipulation you can do it passing the data manually:
+To make it token-based, you can do it just passing the token (code simplified):
 
 ```js
-import { EditTable } from './edittable.jsx';
+var token = cookies('token');  // Using http://github.com/franciscop/cookies.js
+<EditTable url="/api/users" token={token} fields={fields} />;
+```
+
+And to use your own authentication method, you would overwrite the method `auth` within the API:
+
+```js
+var auth = function(data, callback){
+  data = data || {};
+  if (cookies('token')) {   // Using http://github.com/franciscop/cookies.js
+    data.authtoken = cookies('token');
+  }
+  callback(data);
+}
+<EditTable url="/api/users" auth={auth} fields={fields} />;
+```
+
+
+### Local Manipulation
+
+We also support not using a REST API. For instance, let's store the data within a variable (no persistence):
+
+```js
+import EditTable from './edittable.jsx';
 
 class UserList extends React.Component {
   constructor(){
@@ -115,4 +160,19 @@ class UserList extends React.Component {
     return <EditTable fields={fields} data={data} update={update} />;
   }
 }
+```
+
+
+### Bake your own
+
+To make your own persistence model, just overwrite the API. This is the footprint of them:
+
+```js
+var api = {
+  get: function(callback){ /* write your own */ },
+  post: function(data, callback){ /* write your own */ },
+  put: function(id, data, callback){ /* write your own */ },
+  delete: function(id, callback){ /* write your own */ }
+};
+<EditTable fields={fields} api={api} />;
 ```

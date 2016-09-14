@@ -162,6 +162,7 @@ export default class EditTable extends React.Component {
     this.state = { data: props.data || [] };
     this.api = props.api || api;
     this.api.url = props.url || props.name || '/';
+    this.api.token = props.token || false;
   }
   error(err){
     alert(err);
