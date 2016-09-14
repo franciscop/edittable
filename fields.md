@@ -148,7 +148,7 @@ var fields = {
 
 The function validate receives three parameters: `(value, callback, self)`. The `value` is the current value of the field being edited. The callback *has* to be called and self includes other data that might be relevant.
 
-The callback accepts two parameter, the first one indicates whether the test is passed (`true`) or not (`false`) and the second one indicates the error if any. You should *not* pass true AND a second parameter as it doesn't make sense. It is an async function so you can check against any API would you like to do so. For example, let's check if the nickname is available:
+The callback accepts one parameter that indicates whether there is an error or not. To successfully pass it, just call it empty or with null. It is an async function so you can check against any API would you like to do so. For example, let's check if the nickname is available:
 
 ```js
 var fields = {
@@ -157,9 +157,9 @@ var fields = {
     validate: function(value, callback){
       $.post('/users/nickname_available', { nick: value }, function(data){
         if (data.available) {
-          callback(true);
+          callback();  // or callback(null)
         } else {
-          callback(false, 'Nickname not available');
+          callback('Nickname not available');
         }
       });
     }
@@ -172,13 +172,28 @@ var fields = {
 
 ## Display
 
-A function to manipulate the data in case we want to display it differently than the way it is stored. Let's say we want to display only the end of a hash:
+A way to manipulate the data in case we want to display it differently than the way it is stored. In its simplest form, it is a string; then it will be assumed that the field is an object and the property will be extracted:
+
+```js
+var data = [
+  { location: { text: 'London, UK', country: 'UK', city: 'London', ... } },
+  { location: { text: 'Tokyo, Japan', country: 'Japan', city: 'Tokyo', ... } },
+];
+
+var fields = {
+  location: { header: 'City', display: 'city' }
+};
+```
+
+> Note: when the data value is an object, it defaults to `text` so if `display` was omitted  above it would default to `display: 'text'`
+
+It can also be a function, so it will manipulate the whole field. Let's say we want to display only the end of a hash:
 
 ```js
 var fields = {
   hash: {
     header: 'Hash',
-    display: (hash, callback) => callback(hash.slice(-6))
+    display: (hash, callback) => callback(hash ? hash.slice(-6) : '')
   }
 };
 ```
@@ -197,7 +212,7 @@ var fields = {
   creation: {
     header: 'Created at',
     readonly: true,         // Since it doesn't exist in our data
-    display: (value, callback) => callback(IdToDate(value))
+    display: (value, callback, self) => callback(IdToDate(self.id))
   }
 };
 ```
@@ -316,5 +331,27 @@ This options parameter accepts several forms:
     </select>
     ```
 
+### location
+
+Location uses the Google API to find and identify each of the locations that the user writes. The data format should be an object with this format:
+
+```js
+var data = [
+  { address: { text: 'London, UK', id: 'ChIJdd4hrwug2EcRmSrV3Vo6llI' } },
+];
+```
+
+Then to use it, the field should have this format:
+
+```js
+var fields = {
+  address: { type: 'location', display: 'text' }
+};
+```
+
+
+
 
 ### YourOwn
+
+You will be able to create your own, however the EditTable's API is not ready yet. Please [help us](https://github.com/franciscop/table/issues)

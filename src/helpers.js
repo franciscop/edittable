@@ -1,10 +1,11 @@
 // Parse the data for displaying each field
 export function parseData(data, extract, callback){
 
-  if (extract)
+  if (extract) {
     return typeof extract === 'string' ?
       callback(data[extract]) :
       extract.call(this, data, callback, this);
+    }
 
   if (!data)
     return callback('');
