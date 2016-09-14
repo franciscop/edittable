@@ -9,7 +9,7 @@ Table of Contents:
 5. Readonly
 6. Validate
 7. Display
-8. Field Types: [`text`](#text), [`email`](#email), [`password`](#password), [`select`](#select), [`location`](#location), [`date`](#date), [`time`](#time), `<YourOwn />`
+8. Field Types: [`text`](#text), [`email`](#email), [`password`](#password), [`select`](#select), [`location`](#location), [`date`](#date), [`time`](#time), [`<YourOwn />`](#yourown)
 
 On its simplest form, the fields is just an array:
 
@@ -315,4 +315,4 @@ This options parameter accepts several forms:
     ```
 
 
-### <YourOwn />
+### YourOwn
