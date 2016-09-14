@@ -2,15 +2,15 @@
 
 Table of Contents:
 
-| Table of Contents |
-| ----------------- |
-| 1. Header         |
-| 2. Name           |
-| 3. Placeholder    |
-| 4. Required       |
-| 5. Readonly       |
-| 6. Validate       |
-| 7. Display        |
+| Table of Contents                 |
+| --------------------------------- |
+| 1. [Header](#header)              |
+| 2. [Name](#name)                  |
+| 3. [Placeholder](#placeholder)    |
+| 4. [Required](#required)          |
+| 5. [Readonly](#readonly)          |
+| 6. [Validate](#validate)          |
+| 7. [Display](#display)            |
 | 8. Field Types: [`text`](#text), [`email`](#email), [`password`](#password), [`select`](#select), [`location`](#location), [`date`](#date), [`time`](#time), [`<YourOwn />`](#yourown) |
 
 On its simplest form, the fields is just an array:
