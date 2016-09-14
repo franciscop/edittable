@@ -1,20 +1,22 @@
 import React from 'react';
 import {render} from 'react-dom';
-import EditTable from './table.jsx';
+import EditTable from '../src/table.jsx';
 
+var demoData = [
+  { id: 1, name: 'Test1', email: 'test1@test.com', choose: 'First', location: { text: 'Valencia, Spain', id: 1 } },
+  { id: 2, name: 'Test2', email: 'test2@test.com', choose: 'Second', location: { text: 'Tokyo, Japan', id: 2 } },
+  { id: 3, name: 'Test3', email: 'test3@test.com', choose: 'First', location: { text: 'London, UK', id: 3 } },
+  { id: 4, name: 'Test4', email: 'test4@test.com', choose: 'Third', location: { text: 'San Francisco, USA', id: 4 } },
+];
+
+// Create an instance with few fields
 class DemoTable extends React.Component {
   constructor(){
     super();
-    this.state = { data: [
-      { name: 'Test1', email: 'test1@test.com', choose: 'First', location: { text: 'Valencia, Spain', id: 1 } },
-      { name: 'Test2', email: 'test2@test.com', choose: 'Second', location: { text: 'Tokyo, Japan', id: 2 } },
-      { name: 'Test3', email: 'test3@test.com', choose: 'First', location: { text: 'London, UK', id: 3 } },
-      { name: 'Test4', email: 'test4@test.com', choose: 'Third', location: { text: 'San Francisco, USA', id: 4 } },
-    ]};
+    this.state = { data: demoData };
   }
 
   update(data){
-    console.log("Data:", data);
     this.setState({ data: data });
   }
 
@@ -42,4 +44,36 @@ class DemoTable extends React.Component {
   }
 }
 
-render(<DemoTable />, document.getElementById('container'));
+render(<DemoTable />, document.getElementById('demotable'));
+
+
+
+// Create an instance with few fields
+class DateTable extends React.Component {
+  constructor(){
+    super();
+    this.state = { data: demoData.map(el => {
+      el.date = '2016-0' + Math.floor(Math.random() * 9 + 1) + '-' + Math.floor(Math.random() * 18 + 10);
+      return el;
+    }) };
+  }
+
+  update(data){
+    this.setState({ data: data });
+  }
+
+  render () {
+    var fields = {
+      date: { header: 'Date *', type: 'date' },
+      email: { header: 'Email *', type: 'email' },
+      location: { header: 'Location', type: 'location', extract: 'text' }
+    };
+
+    var data = this.state.data;
+    var update = this.update.bind(this);
+
+    return <EditTable url="/api/users" fields={fields} data={data} update={update} />;
+  }
+}
+
+render(<DateTable />, document.getElementById('datetable'));

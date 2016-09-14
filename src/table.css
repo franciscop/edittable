@@ -6,8 +6,14 @@
   font-size: 1.1em;
   line-height: 1.5;
   background: #fff;
+  box-sizing: border-box; /* https://css-tricks.com/box-sizing/ */
 }
 
+.edittable *,
+.edittable *:before,
+.edittable *:after {
+  box-sizing: inherit;
+}
 
 /* Cells */
 .edittable th {
@@ -26,8 +32,9 @@
 
 .edittable input,
 .edittable select {
-  border: 3px solid #eee;
-  padding: .3em .5em;
+  border: none;
+  box-shadow: 0 0 0 3px #eee inset;
+  padding: .4em .6em;
   font-size: inherit;
   width: 90%;
   background: #fff;
@@ -36,7 +43,7 @@
 
 .edittable input:focus,
 .edittable select:focus {
-  border: 3px solid #bdf;
+  box-shadow: 0 0 0 3px #bdf inset;
 }
 
 .edittable td.error {
@@ -45,7 +52,11 @@
 
 .edittable input.error,
 .edittable select.error {
-  border: 3px solid #fbb;
+  box-shadow: 0 0 0 3px #fbb inset;
+}
+
+.edittable input:invalid {
+  box-shadow: 0 0 0 3px #fbb inset;
 }
 
 

@@ -71,6 +71,8 @@ var fields = {
 };
 ```
 
+[![Fields Documentation](web/images/fields_button.png))(fields.md)
+
 On its simplest form, the fields is just an array:
 
 ```js
@@ -113,6 +115,14 @@ Awesome, now it's working properly. Let's move to see what field types are there
 ## Field type `field.type = text`
 
 There are many field types, some basic ones and some complex ones. The basic ones compile into an <input> with some lax properties, while the advanced ones include external APIs and make wonders. You can of course include your own fields.
+
+- `text` (default)
+- `email`
+- `password`
+- `select`
+- `location`
+- `date`
+- `time` (not yet)
 
 ### default
 

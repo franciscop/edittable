@@ -57,7 +57,7 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _table = __webpack_require__(/*! ./table.jsx */ 172);
+	var _table = __webpack_require__(/*! ../src/table.jsx */ 172);
 	
 	var _table2 = _interopRequireDefault(_table);
 	
@@ -69,6 +69,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	var demoData = [{ id: 1, name: 'Test1', email: 'test1@test.com', choose: 'First', location: { text: 'Valencia, Spain', id: 1 } }, { id: 2, name: 'Test2', email: 'test2@test.com', choose: 'Second', location: { text: 'Tokyo, Japan', id: 2 } }, { id: 3, name: 'Test3', email: 'test3@test.com', choose: 'First', location: { text: 'London, UK', id: 3 } }, { id: 4, name: 'Test4', email: 'test4@test.com', choose: 'Third', location: { text: 'San Francisco, USA', id: 4 } }];
+	
+	// Create an instance with few fields
+	
 	var DemoTable = function (_React$Component) {
 	  _inherits(DemoTable, _React$Component);
 	
@@ -77,14 +81,13 @@
 	
 	    var _this = _possibleConstructorReturn(this, (DemoTable.__proto__ || Object.getPrototypeOf(DemoTable)).call(this));
 	
-	    _this.state = { data: [{ name: 'Test1', email: 'test1@test.com', choose: 'First', location: { text: 'Valencia, Spain', id: 1 } }, { name: 'Test2', email: 'test2@test.com', choose: 'Second', location: { text: 'Tokyo, Japan', id: 2 } }, { name: 'Test3', email: 'test3@test.com', choose: 'First', location: { text: 'London, UK', id: 3 } }, { name: 'Test4', email: 'test4@test.com', choose: 'Third', location: { text: 'San Francisco, USA', id: 4 } }] };
+	    _this.state = { data: demoData };
 	    return _this;
 	  }
 	
 	  _createClass(DemoTable, [{
 	    key: 'update',
 	    value: function update(data) {
-	      console.log("Data:", data);
 	      this.setState({ data: data });
 	    }
 	  }, {
@@ -116,7 +119,50 @@
 	  return DemoTable;
 	}(_react2.default.Component);
 	
-	(0, _reactDom.render)(_react2.default.createElement(DemoTable, null), document.getElementById('container'));
+	(0, _reactDom.render)(_react2.default.createElement(DemoTable, null), document.getElementById('demotable'));
+	
+	// Create an instance with few fields
+	
+	var DateTable = function (_React$Component2) {
+	  _inherits(DateTable, _React$Component2);
+	
+	  function DateTable() {
+	    _classCallCheck(this, DateTable);
+	
+	    var _this2 = _possibleConstructorReturn(this, (DateTable.__proto__ || Object.getPrototypeOf(DateTable)).call(this));
+	
+	    _this2.state = { data: demoData.map(function (el) {
+	        el.date = '2016-0' + Math.floor(Math.random() * 9 + 1) + '-' + Math.floor(Math.random() * 18 + 10);
+	        return el;
+	      }) };
+	    return _this2;
+	  }
+	
+	  _createClass(DateTable, [{
+	    key: 'update',
+	    value: function update(data) {
+	      this.setState({ data: data });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var fields = {
+	        date: { header: 'Date *', type: 'date' },
+	        email: { header: 'Email *', type: 'email' },
+	        location: { header: 'Location', type: 'location', extract: 'text' }
+	      };
+	
+	      var data = this.state.data;
+	      var update = this.update.bind(this);
+	
+	      return _react2.default.createElement(_table2.default, { url: '/api/users', fields: fields, data: data, update: update });
+	    }
+	  }]);
+	
+	  return DateTable;
+	}(_react2.default.Component);
+	
+	(0, _reactDom.render)(_react2.default.createElement(DateTable, null), document.getElementById('datetable'));
 
 /***/ },
 /* 1 */
@@ -22248,26 +22294,23 @@
 	
 	    var _this7 = _possibleConstructorReturn(this, (EditTable.__proto__ || Object.getPrototypeOf(EditTable)).call(this, props));
 	
-	    _this7.state = {
-	      data: props.data || []
-	    };
+	    _this7.state = { data: props.data || [] };
+	    _this7.api = props.api || _api2.default;
+	    _this7.api.url = props.url || props.name || '/';
 	    return _this7;
 	  }
 	
 	  _createClass(EditTable, [{
 	    key: 'error',
 	    value: function error(err) {
-	      console.log(err);
 	      alert(err);
 	    }
 	  }, {
 	    key: 'add',
-	    value: function add(row, callback) {
-	      var data = this.state.data;
-	      data.push(row);
-	      this.setState({ data: data });
+	    value: function add(row) {
+	      this.setState({ data: this.state.data.concat(row) });
 	      if (this.props.update) this.props.update(this.state.data);
-	      _api2.default.post(data, callback);
+	      this.api.post(row);
 	    }
 	  }, {
 	    key: 'update',
@@ -22280,7 +22323,7 @@
 	      data[index] = entry;
 	      this.setState({ data: data });
 	      if (this.props.update) this.props.update(this.state.data);
-	      _api2.default.put('/' + this.props.name + '/' + data.id, data, function () {
+	      _api2.default.put(entry.id, entry, function () {
 	        console.log("Done!", arguments);
 	      }, function () {
 	        console.log("Error!", arguments);
@@ -22306,7 +22349,6 @@
 	    key: 'render',
 	    value: function render() {
 	      var fields = (0, _helpers.parseFields)(this.props.fields);
-	
 	      var tableHead = [];
 	      var tableNew = [];
 	      for (var name in fields) {
@@ -22367,6 +22409,10 @@
 	
 	var _fieldLocation2 = _interopRequireDefault(_fieldLocation);
 	
+	var _fieldDate = __webpack_require__(/*! ./field-date.jsx */ 178);
+	
+	var _fieldDate2 = _interopRequireDefault(_fieldDate);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22420,6 +22466,9 @@
 	          break;
 	        case 'location':
 	          return _react2.default.createElement(_fieldLocation2.default, _extends({}, props, { error: this.state.error, onChange: this.change, value: value || '' }));
+	          break;
+	        case 'date':
+	          return _react2.default.createElement(_fieldDate2.default, _extends({}, props, { error: this.state.error, onChange: this.change, value: value }));
 	          break;
 	        case 'read':
 	          return _react2.default.createElement(
@@ -22616,8 +22665,6 @@
 	});
 	exports.parseData = parseData;
 	exports.parseFields = parseFields;
-	var verbose = true;
-	
 	// Parse the data for displaying each field
 	function parseData(data, extract, callback) {
 	
@@ -22666,9 +22713,6 @@
 	    var defValidate;
 	
 	    _loop(name);
-	  }
-	  if (verbose) {
-	    console.log("Fields:", fields);
 	  }
 	  return fields;
 	}
@@ -22721,6 +22765,85 @@
 	};
 	
 	exports.default = api;
+
+/***/ },
+/* 178 */
+/*!****************************!*\
+  !*** ./src/field-date.jsx ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var DateField = function (_React$Component) {
+	  _inherits(DateField, _React$Component);
+	
+	  function DateField() {
+	    _classCallCheck(this, DateField);
+	
+	    return _possibleConstructorReturn(this, (DateField.__proto__ || Object.getPrototypeOf(DateField)).apply(this, arguments));
+	  }
+	
+	  _createClass(DateField, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var self = this;
+	      function setValue(value) {
+	        var picker = $(self.date).pickadate('picker');
+	        var date = value.split('-').map(function (n) {
+	          return parseInt(n);
+	        });
+	        date[1]--; // Months are 0-indexed
+	        if (value) picker.set('select', date);
+	      }
+	      $(this.date).pickadate({
+	        hiddenName: true,
+	        format: 'yyyy-mm-dd',
+	        onClose: function onClose() {
+	          self.props.onChange(self.date.value);
+	        }
+	      });
+	      setValue(this.date.value);
+	      // var picker = $(this.date).pickadate('picker');
+	      // var date = this.date.value.split('-').map(n => parseInt(n));
+	      // date[1]--; // Months are 0-indexed
+	      // if (this.date.value) picker.set('select', date);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      var field = this.props.field;
+	      var value = this.props.value;
+	      return _react2.default.createElement('input', { className: this.props.className, ref: function ref(c) {
+	          return _this2.date = c;
+	        }, name: field.name, 'data-type': 'location', onChange: this.props.onChange, value: value, placeholder: field.placeholder });
+	    }
+	  }]);
+	
+	  return DateField;
+	}(_react2.default.Component);
+	
+	exports.default = DateField;
 
 /***/ }
 /******/ ]);

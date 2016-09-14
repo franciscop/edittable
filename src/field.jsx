@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from './field-select.jsx';
 import Location from './field-location.jsx';
+import DateField from './field-date.jsx';
 
 export default class Field extends React.Component {
   constructor(props){
@@ -30,6 +31,9 @@ export default class Field extends React.Component {
         break;
       case 'location':
         return <Location {...props} error={this.state.error} onChange={this.change} value={value || ''} />;
+        break;
+      case 'date':
+        return <DateField {...props} error={this.state.error} onChange={this.change} value={value}/>
         break;
       case 'read':
         return <div>{value}</div>

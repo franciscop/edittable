@@ -1,21 +1,32 @@
-componentDidMount(){
-  var self = this;
-  $('[name="start"], [name="end"], [name="startFilter"], [name="endFilter"]').each(function(i, input){
-    // Avoid re-calling it if it's already been called on those elements
-    if (self.props.field === $(input).attr('name') &&
-        $(input).siblings('.picker').length === 0) {
+import React from 'react';
 
-      var $input = $(input).pickadate({
-        hiddenName: true,
-        formatSubmit: 'yyyy-mm-dd',
-        onClose: function () {
-          self.props.onChange(this._hidden.value);
-        }
-      });
-      var picker = $input.pickadate('picker');
-      var date = input.value.split('-').map(n => parseInt(n));
+export default class DateField extends React.Component {
+  componentDidMount(){
+    var self = this;
+    function setValue(value){
+      var picker = $(self.date).pickadate('picker');
+      var date = value.split('-').map(n => parseInt(n));
       date[1]--; // Months are 0-indexed
-      if (input.value) picker.set('select', date);
+      if (value) picker.set('select', date);
     }
-  });
+    $(this.date).pickadate({
+      hiddenName: true,
+      format: 'yyyy-mm-dd',
+      onClose: function () {
+        self.props.onChange(self.date.value);
+      }
+    });
+    setValue(this.date.value);
+    // var picker = $(this.date).pickadate('picker');
+    // var date = this.date.value.split('-').map(n => parseInt(n));
+    // date[1]--; // Months are 0-indexed
+    // if (this.date.value) picker.set('select', date);
+  }
+  render(){
+    var field = this.props.field;
+    var value = this.props.value;
+    return (
+      <input className={this.props.className} ref={c => this.date = c} name={field.name} data-type="location" onChange={this.props.onChange} value={value} placeholder={field.placeholder} />
+    );
+  }
 }

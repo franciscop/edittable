@@ -1,5 +1,3 @@
-var verbose = true;
-
 // Parse the data for displaying each field
 export function parseData(data, extract, callback){
 
@@ -44,9 +42,6 @@ export function parseFields(fields){
     fields[name].required = fields[name].required || !!fields[name].header.match(/\*\s*$/);
     var defValidate = (data, cb) => cb(fields[name].required ? !!data : true);
     fields[name].validate = fields[name].validate || defValidate;
-  }
-  if (verbose) {
-    console.log("Fields:", fields);
   }
   return fields;
 }

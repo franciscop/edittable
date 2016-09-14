@@ -159,20 +159,17 @@ class TableFoot extends React.Component {
 export default class EditTable extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      data: props.data || []
-    };
+    this.state = { data: props.data || [] };
+    this.api = props.api || api;
+    this.api.url = props.url || props.name || '/';
   }
   error(err){
-    console.log(err);
     alert(err);
   }
-  add(row, callback){
-    var data = this.state.data;
-    data.push(row);
-    this.setState({ data: data });
+  add(row){
+    this.setState({ data: this.state.data.concat(row) });
     if (this.props.update) this.props.update(this.state.data);
-    api.post(data, callback);
+    this.api.post(row);
   }
   update(entry){
     var data = this.state.data;
@@ -181,7 +178,7 @@ export default class EditTable extends React.Component {
     data[index] = entry;
     this.setState({ data: data });
     if (this.props.update) this.props.update(this.state.data);
-    api.put('/' + this.props.name + '/' + data.id, data, function(){
+    api.put(entry.id, entry, function(){
       console.log("Done!", arguments);
     }, function(){
       console.log("Error!", arguments);
@@ -189,7 +186,7 @@ export default class EditTable extends React.Component {
   }
   remove(id){
     var data = this.state.data;
-    var index = data.map(entry => entry.id).indexOf(id)
+    var index = data.map(entry => entry.id).indexOf(id);
     if (index === -1) throw new Error("That element is not in the dataset");
     this.setState({ data: (data.splice(index, 1) && data) });
     if (this.props.update) this.props.update(this.state.data);
@@ -197,7 +194,6 @@ export default class EditTable extends React.Component {
   }
   render(){
     var fields = parseFields(this.props.fields);
-
     var tableHead = [];
     var tableNew = [];
     for (var name in fields) {
