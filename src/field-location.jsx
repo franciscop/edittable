@@ -1,40 +1,13 @@
 import React from 'react';
-
-var loaded = false;
-var loading = false;
-
-function loadGoogle(key, callback){
-  if (loading) return false;
-  if (loaded) return callback(google);
-  loading = true;
-  var script = document.createElement("script")
-  script.type = "text/javascript";
-  script.className = 'googlemapsscript';
-  if (script.readyState){  //IE
-    script.onreadystatechange = function(){
-      if (script.readyState == "loaded" ||
-          script.readyState == "complete"){
-        script.onreadystatechange = null;
-        loaded = true;
-        callback(google);
-      }
-    };
-  } else {  // Others
-    script.onload = function(){
-      loaded = true;
-      callback(google);
-    };
-  }
-
-  script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key + '&libraries=places';
-  document.getElementsByTagName("head")[0].appendChild(script);
-}
+import loadscript from './loadscript.js';
 
 export default class Location extends React.Component {
   componentDidMount(){
     var self = this;
 
-    loadGoogle(this.props.field.key, function loadSearch(google){
+    var url = 'https://maps.googleapis.com/maps/api/js?key=' + this.props.field.key + '&libraries=places';
+
+    loadscript(url, function loadSearch(google){
       if (typeof google === 'undefined' || !google || !google.maps.places) {
         return console.error("Couldn't find Google");
       }

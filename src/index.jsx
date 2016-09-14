@@ -66,7 +66,7 @@ class DateTable extends React.Component {
     var fields = {
       date: { header: 'Date *', type: 'date' },
       email: { header: 'Email *', type: 'email' },
-      location: { header: 'Location', type: 'location', extract: 'text' }
+      location: { header: 'Location', type: 'location', key: 'AIzaSyCNgU9MgTGYjQISIzDxQXlHQFYSveePzko' }
     };
 
     var data = this.state.data;

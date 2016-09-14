@@ -149,7 +149,7 @@
 	      var fields = {
 	        date: { header: 'Date *', type: 'date' },
 	        email: { header: 'Email *', type: 'email' },
-	        location: { header: 'Location', type: 'location', extract: 'text' }
+	        location: { header: 'Location', type: 'location', key: 'AIzaSyCNgU9MgTGYjQISIzDxQXlHQFYSveePzko' }
 	      };
 	
 	      var data = this.state.data;
@@ -22053,9 +22053,9 @@
 	
 	var _field2 = _interopRequireDefault(_field);
 	
-	var _helpers = __webpack_require__(/*! ./helpers.js */ 176);
+	var _helpers = __webpack_require__(/*! ./helpers.js */ 178);
 	
-	var _api = __webpack_require__(/*! ./api.js */ 177);
+	var _api = __webpack_require__(/*! ./api.js */ 179);
 	
 	var _api2 = _interopRequireDefault(_api);
 	
@@ -22414,7 +22414,7 @@
 	
 	var _fieldLocation2 = _interopRequireDefault(_fieldLocation);
 	
-	var _fieldDate = __webpack_require__(/*! ./field-date.jsx */ 178);
+	var _fieldDate = __webpack_require__(/*! ./field-date.jsx */ 177);
 	
 	var _fieldDate2 = _interopRequireDefault(_fieldDate);
 	
@@ -22569,7 +22569,7 @@
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -22581,6 +22581,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _loadscript = __webpack_require__(/*! ./loadscript.js */ 176);
+	
+	var _loadscript2 = _interopRequireDefault(_loadscript);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22589,10 +22593,89 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	var Location = function (_React$Component) {
+	  _inherits(Location, _React$Component);
+	
+	  function Location() {
+	    _classCallCheck(this, Location);
+	
+	    return _possibleConstructorReturn(this, (Location.__proto__ || Object.getPrototypeOf(Location)).apply(this, arguments));
+	  }
+	
+	  _createClass(Location, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var self = this;
+	
+	      var url = 'https://maps.googleapis.com/maps/api/js?key=' + this.props.field.key + '&libraries=places';
+	
+	      (0, _loadscript2.default)(url, function loadSearch(google) {
+	        if (typeof google === 'undefined' || !google || !google.maps.places) {
+	          return console.error("Couldn't find Google");
+	        }
+	        var searchBox = new google.maps.places.SearchBox(self.input_text);
+	        // When the user selects one of the locations
+	        searchBox.addListener('places_changed', function () {
+	          var places = searchBox.getPlaces();
+	          if (places.length == 0) return self.props.onChange();
+	          self.props.onChange({
+	            id: places[0].place_id,
+	            text: places[0].formatted_address
+	          });
+	          self.input_id.value = places[0].place_id;
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      var field = this.props.field;
+	      var value = this.props.value;
+	      var id = '',
+	          text = '';
+	      if (value) {
+	        id = value.id || value;
+	        text = value.text;
+	      }
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { className: this.props.className, ref: function ref(c) {
+	            return _this2.input_text = c;
+	          }, name: field.name, 'data-type': 'location', onChange: this.props.onChange, value: text, placeholder: field.placeholder }),
+	        _react2.default.createElement('input', { ref: function ref(c) {
+	            return _this2.input_id = c;
+	          }, name: field.name + '_id', 'data-type': 'location', type: 'hidden', value: id })
+	      );
+	    }
+	  }]);
+	
+	  return Location;
+	}(_react2.default.Component);
+	
+	exports.default = Location;
+
+/***/ },
+/* 176 */
+/*!***************************!*\
+  !*** ./src/loadscript.js ***!
+  \***************************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = loadscript;
+	//var loaded = [];
+	
 	var loaded = false;
 	var loading = false;
 	
-	function loadGoogle(key, callback) {
+	function loadscript(url, callback) {
 	  if (loading) return false;
 	  if (loaded) return callback(google);
 	  loading = true;
@@ -22616,191 +22699,12 @@
 	    };
 	  }
 	
-	  script.src = 'https://maps.googleapis.com/maps/api/js?key=' + key + '&libraries=places';
+	  script.src = url;
 	  document.getElementsByTagName("head")[0].appendChild(script);
-	}
-	
-	var Location = function (_React$Component) {
-	  _inherits(Location, _React$Component);
-	
-	  function Location() {
-	    _classCallCheck(this, Location);
-	
-	    return _possibleConstructorReturn(this, (Location.__proto__ || Object.getPrototypeOf(Location)).apply(this, arguments));
-	  }
-	
-	  _createClass(Location, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      var self = this;
-	
-	      loadGoogle(this.props.field.key, function loadSearch(google) {
-	        if (typeof google === 'undefined' || !google || !google.maps.places) {
-	          return console.error("Couldn't find Google");
-	        }
-	        var searchBox = new google.maps.places.SearchBox(self.input_text);
-	        // When the user selects one of the locations
-	        searchBox.addListener('places_changed', function () {
-	          var places = searchBox.getPlaces();
-	          if (places.length == 0) return self.props.onChange();
-	          self.props.onChange({
-	            id: places[0].place_id,
-	            text: places[0].formatted_address
-	          });
-	          self.input_id.value = places[0].place_id;
-	        });
-	      });
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      var _this2 = this;
-	
-	      var field = this.props.field;
-	      var value = this.props.value;
-	      var id = '',
-	          text = '';
-	      if (value) {
-	        id = value.id || value;
-	        text = value.text;
-	      }
-	      return _react2.default.createElement(
-	        "div",
-	        null,
-	        _react2.default.createElement("input", { className: this.props.className, ref: function ref(c) {
-	            return _this2.input_text = c;
-	          }, name: field.name, "data-type": "location", onChange: this.props.onChange, value: text, placeholder: field.placeholder }),
-	        _react2.default.createElement("input", { ref: function ref(c) {
-	            return _this2.input_id = c;
-	          }, name: field.name + '_id', "data-type": "location", type: "hidden", value: id })
-	      );
-	    }
-	  }]);
-	
-	  return Location;
-	}(_react2.default.Component);
-	
-	exports.default = Location;
-
-/***/ },
-/* 176 */
-/*!************************!*\
-  !*** ./src/helpers.js ***!
-  \************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.parseData = parseData;
-	exports.parseFields = parseFields;
-	// Parse the data for displaying each field
-	function parseData(data, extract, callback) {
-	
-	  if (extract) {
-	    return typeof extract === 'string' ? callback(data[extract]) : extract.call(this, data, callback, this);
-	  }
-	
-	  if (!data) return callback('');
-	
-	  if (typeof data === 'string') return callback(data);
-	
-	  if (data && data.text) return callback(data.text);
-	
-	  throw new Error('The data is malformed, it should be a string, an object with ' + 'the property "text" or you should define how to show it with "field.display"');
-	}
-	
-	// Parse each field and inflate it
-	function parseFields(fields) {
-	  if (typeof fields === 'string') fields = fields.split(/\s+/);
-	  if (fields instanceof Array) {
-	    fields = fields.reduce(function (fields, item) {
-	      fields[item] = item;
-	      return fields;
-	    }, {});
-	  }
-	
-	  var _loop = function _loop(name) {
-	    if (typeof fields[name] === 'string') {
-	      fields[name] = { header: fields[name] };
-	    }
-	    fields[name].header = fields[name].header || name;
-	    fields[name].name = fields[name].name || name;
-	    fields[name].type = fields[name].type || 'text';
-	    fields[name].placeholder = fields[name].placeholder || fields[name].header;
-	    fields[name].title = fields[name].title || false;
-	    if (fields[name].readonly) fields[name].type = 'read';
-	
-	    fields[name].required = fields[name].required || !!fields[name].header.match(/\*\s*$/);
-	
-	    defValidate = function defValidate(data, cb) {
-	      return cb(fields[name].required ? !!data : true);
-	    };
-	
-	    fields[name].validate = fields[name].validate || defValidate;
-	  };
-	
-	  for (var name in fields) {
-	    var defValidate;
-	
-	    _loop(name);
-	  }
-	  return fields;
 	}
 
 /***/ },
 /* 177 */
-/*!********************!*\
-  !*** ./src/api.js ***!
-  \********************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Full API overwrite
-	var api = {
-	  url: '/api/users',
-	  auth: function auth(data, callback) {
-	    data = data || {};
-	    if (this.token) data.token = this.token;
-	    callback(data);
-	  },
-	  ajax: function ajax(url, method, data, callback) {
-	    var self = this;
-	    callback = callback || function () {};
-	    this.auth(data, function (dataAuth) {
-	      $.ajax({
-	        url: url,
-	        data: dataAuth,
-	        type: method,
-	        success: callback.bind(self, null),
-	        error: callback.bind(self)
-	      });
-	    });
-	  },
-	  get: function get(callback) {
-	    this.ajax(this.url, 'GET', {}, callback);
-	  },
-	  post: function post(data, callback) {
-	    this.ajax(this.url, 'POST', data, callback);
-	  },
-	  put: function put(id, data, callback) {
-	    this.ajax(this.url + '/' + id, 'PUT', data, callback);
-	  },
-	  delete: function _delete(id, callback) {
-	    this.ajax(this.url + '/' + id, 'DELETE', {}, callback);
-	  }
-	};
-	
-	exports.default = api;
-
-/***/ },
-/* 178 */
 /*!****************************!*\
   !*** ./src/field-date.jsx ***!
   \****************************/
@@ -22877,6 +22781,123 @@
 	}(_react2.default.Component);
 	
 	exports.default = DateField;
+
+/***/ },
+/* 178 */
+/*!************************!*\
+  !*** ./src/helpers.js ***!
+  \************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.parseData = parseData;
+	exports.parseFields = parseFields;
+	// Parse the data for displaying each field
+	function parseData(data, extract, callback) {
+	
+	  if (extract) {
+	    return typeof extract === 'string' ? callback(data[extract]) : extract.call(this, data, callback, this);
+	  }
+	
+	  if (!data) return callback('');
+	
+	  if (typeof data === 'string') return callback(data);
+	
+	  if (data && data.text) return callback(data.text);
+	
+	  throw new Error('The data is malformed, it should be a string, an object with ' + 'the property "text" or you should define how to show it with "field.display"');
+	}
+	
+	// Parse each field and inflate it
+	function parseFields(fields) {
+	  if (typeof fields === 'string') fields = fields.split(/\s+/);
+	  if (fields instanceof Array) {
+	    fields = fields.reduce(function (fields, item) {
+	      fields[item] = item;
+	      return fields;
+	    }, {});
+	  }
+	
+	  var _loop = function _loop(name) {
+	    if (typeof fields[name] === 'string') {
+	      fields[name] = { header: fields[name] };
+	    }
+	    fields[name].header = fields[name].header || name;
+	    fields[name].name = fields[name].name || name;
+	    fields[name].type = fields[name].type || 'text';
+	    fields[name].placeholder = fields[name].placeholder || fields[name].header;
+	    fields[name].title = fields[name].title || false;
+	    if (fields[name].readonly) fields[name].type = 'read';
+	
+	    fields[name].required = fields[name].required || !!fields[name].header.match(/\*\s*$/);
+	
+	    defValidate = function defValidate(data, cb) {
+	      return cb(fields[name].required ? !!data : true);
+	    };
+	
+	    fields[name].validate = fields[name].validate || defValidate;
+	  };
+	
+	  for (var name in fields) {
+	    var defValidate;
+	
+	    _loop(name);
+	  }
+	  return fields;
+	}
+
+/***/ },
+/* 179 */
+/*!********************!*\
+  !*** ./src/api.js ***!
+  \********************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Full API overwrite
+	var api = {
+	  url: '/api/users',
+	  auth: function auth(data, callback) {
+	    data = data || {};
+	    if (this.token) data.token = this.token;
+	    callback(data);
+	  },
+	  ajax: function ajax(url, method, data, callback) {
+	    var self = this;
+	    callback = callback || function () {};
+	    this.auth(data, function (dataAuth) {
+	      $.ajax({
+	        url: url,
+	        data: dataAuth,
+	        type: method,
+	        success: callback.bind(self, null),
+	        error: callback.bind(self)
+	      });
+	    });
+	  },
+	  get: function get(callback) {
+	    this.ajax(this.url, 'GET', {}, callback);
+	  },
+	  post: function post(data, callback) {
+	    this.ajax(this.url, 'POST', data, callback);
+	  },
+	  put: function put(id, data, callback) {
+	    this.ajax(this.url + '/' + id, 'PUT', data, callback);
+	  },
+	  delete: function _delete(id, callback) {
+	    this.ajax(this.url + '/' + id, 'DELETE', {}, callback);
+	  }
+	};
+	
+	exports.default = api;
 
 /***/ }
 /******/ ]);
