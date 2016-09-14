@@ -115,7 +115,7 @@ This will be parsed automatically into a required field. Otherwise, you can pass
 
 ```js
 var fields = {
-  email: { header: 'Email [required]', required: true }
+  email: { header: 'Email', required: true }
 };
 ```
 
@@ -144,7 +144,7 @@ var fields = {
 };
 ```
 
-> When defining our own validate method the required field is ignored so you might want to make sure you are also validating that it's not empty if you want to do so
+> When defining our own validate method the required field is ignored so you might want to check this
 
 The function validate receives three parameters: `(value, callback, self)`. The `value` is the current value of the field being edited. The callback *has* to be called and self includes other data that might be relevant.
 
@@ -176,11 +176,19 @@ A way to manipulate the data in case we want to display it differently than the 
 
 ```js
 var data = [
-  { location: { text: 'London, UK', country: 'UK', city: 'London', ... } },
-  { location: { text: 'Tokyo, Japan', country: 'Japan', city: 'Tokyo', ... } },
+  {
+    manager: { nickname: 'nick1', ... },
+    location: { text: 'London, UK', city: 'London', ... }
+  },
+  {
+    manager: { nickname: 'nick2', ... },
+    location: { text: 'Tokyo, Japan', city: 'Tokyo', ... }
+  },
 ];
 
+// Manipulate them to simplify them
 var fields = {
+  manager: { header: 'Boss', display: 'nickname', readonly: true },
   location: { header: 'City', display: 'city' }
 };
 ```
