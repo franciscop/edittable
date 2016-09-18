@@ -22053,9 +22053,9 @@
 	
 	var _field2 = _interopRequireDefault(_field);
 	
-	var _helpers = __webpack_require__(/*! ./helpers.js */ 178);
+	var _helpers = __webpack_require__(/*! ./helpers.js */ 177);
 	
-	var _api = __webpack_require__(/*! ./api.js */ 179);
+	var _api = __webpack_require__(/*! ./api.js */ 178);
 	
 	var _api2 = _interopRequireDefault(_api);
 	
@@ -22414,7 +22414,7 @@
 	
 	var _fieldLocation2 = _interopRequireDefault(_fieldLocation);
 	
-	var _fieldDate = __webpack_require__(/*! ./field-date.jsx */ 177);
+	var _fieldDate = __webpack_require__(/*! ./field-date.jsx */ 176);
 	
 	var _fieldDate2 = _interopRequireDefault(_fieldDate);
 	
@@ -22581,9 +22581,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _loadscript = __webpack_require__(/*! ./loadscript.js */ 176);
+	var _load = __webpack_require__(/*! ./load.js */ 179);
 	
-	var _loadscript2 = _interopRequireDefault(_loadscript);
+	var _load2 = _interopRequireDefault(_load);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -22609,7 +22609,7 @@
 	
 	      var url = 'https://maps.googleapis.com/maps/api/js?key=' + this.props.field.key + '&libraries=places';
 	
-	      (0, _loadscript2.default)(url, function loadSearch() {
+	      (0, _load2.default)(url, function loadSearch() {
 	        if (typeof google === 'undefined' || !google || !google.maps.places) {
 	          return console.error("Couldn't find Google");
 	        }
@@ -22659,56 +22659,6 @@
 
 /***/ },
 /* 176 */
-/*!***************************!*\
-  !*** ./src/loadscript.js ***!
-  \***************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = loadscript;
-	var loaded = [];
-	var loading = [];
-	
-	function loadscript(url, callback) {
-	  if (loading.indexOf(url) >= 0) {
-	    document.querySelector('[src="' + url + '"]').addEventListener('load', callback);
-	    return false;
-	  }
-	  if (loaded.indexOf(url) >= 0) return callback();
-	  loading.push(url);
-	  var script = document.createElement("script");
-	  script.type = "text/javascript";
-	  if (script.readyState) {
-	    //IE
-	    script.onreadystatechange = function () {
-	      if (script.readyState == "loaded" || script.readyState == "complete") {
-	        script.onreadystatechange = null;
-	        loaded.push(url);
-	        var index = loading.indexOf(url);
-	        if (index >= 0) delete loading[index];
-	        callback();
-	      }
-	    };
-	  } else {
-	    // Others
-	    script.onload = function () {
-	      loaded.push(url);
-	      var index = loading.indexOf(url);
-	      if (index >= 0) delete loading[index];
-	      callback();
-	    };
-	  }
-	
-	  script.src = url;
-	  document.getElementsByTagName("head")[0].appendChild(script);
-	}
-
-/***/ },
-/* 177 */
 /*!****************************!*\
   !*** ./src/field-date.jsx ***!
   \****************************/
@@ -22725,6 +22675,10 @@
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _load = __webpack_require__(/*! ./load.js */ 179);
+	
+	var _load2 = _interopRequireDefault(_load);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -22755,14 +22709,23 @@
 	        date[1]--; // Months are 0-indexed
 	        if (value) picker.set('select', date);
 	      }
-	      $(this.date).pickadate({
-	        hiddenName: true,
-	        format: 'yyyy-mm-dd',
-	        onClose: function onClose() {
-	          self.props.onChange(self.date.value);
-	        }
+	
+	      (0, _load2.default)(['a', 'b', 'c'], function () {
+	        console.log("X");
 	      });
-	      setValue(this.date.value);
+	
+	      (0, _load2.default)('web/picker.js', function () {
+	        (0, _load2.default)('web/picker.date.js', function () {
+	          $(self.date).pickadate({
+	            hiddenName: true,
+	            format: 'yyyy-mm-dd',
+	            onClose: function onClose() {
+	              self.props.onChange(self.date.value);
+	            }
+	          });
+	          setValue(self.date.value);
+	        });
+	      });
 	      // var picker = $(this.date).pickadate('picker');
 	      // var date = this.date.value.split('-').map(n => parseInt(n));
 	      // date[1]--; // Months are 0-indexed
@@ -22787,7 +22750,7 @@
 	exports.default = DateField;
 
 /***/ },
-/* 178 */
+/* 177 */
 /*!************************!*\
   !*** ./src/helpers.js ***!
   \************************/
@@ -22855,7 +22818,7 @@
 	}
 
 /***/ },
-/* 179 */
+/* 178 */
 /*!********************!*\
   !*** ./src/api.js ***!
   \********************/
@@ -22902,6 +22865,79 @@
 	};
 	
 	exports.default = api;
+
+/***/ },
+/* 179 */
+/*!*********************!*\
+  !*** ./src/load.js ***!
+  \*********************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = load;
+	var loaded = [];
+	var loading = [];
+	
+	function loadScript(url, callback) {
+	  var script = document.createElement("script");
+	  script.type = "text/javascript";
+	  if (script.readyState) {
+	    //IE
+	    script.onreadystatechange = function () {
+	      if (script.readyState == "loaded" || script.readyState == "complete") {
+	        script.onreadystatechange = null;
+	        loaded.push(url);
+	        var index = loading.indexOf(url);
+	        if (index >= 0) delete loading[index];
+	        callback();
+	      }
+	    };
+	  } else {
+	    // Others
+	    script.onload = function () {
+	      loaded.push(url);
+	      var index = loading.indexOf(url);
+	      if (index >= 0) delete loading[index];
+	      callback();
+	    };
+	  }
+	
+	  script.src = url;
+	  document.getElementsByTagName("head")[0].appendChild(script);
+	};
+	
+	function loadSheet(url, callback) {}
+	
+	function load(url, callback) {
+	  if (url instanceof Array) {
+	    url.forEach(function (url) {
+	      var old = callback;
+	      console.log(url);
+	      callback = function callback() {
+	        load(url, old);
+	      };
+	    });
+	    return;
+	  }
+	
+	  if (loading.indexOf(url) >= 0) {
+	    document.querySelector('[src="' + url + '"]').addEventListener('load', callback);
+	    return false;
+	  }
+	  if (loaded.indexOf(url) >= 0) return callback();
+	  loading.push(url);
+	
+	  if (url.match(/\.css/)) {
+	    return loadSheet(url, callback);
+	  } else {
+	    return loadScript(url, callback);
+	  }
+	  throw new Error(url + ' is not a recognized type');
+	}
 
 /***/ }
 /******/ ]);

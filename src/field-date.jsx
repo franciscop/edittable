@@ -1,4 +1,5 @@
 import React from 'react';
+import load from './load.js';
 
 export default class DateField extends React.Component {
   componentDidMount(){
@@ -9,14 +10,23 @@ export default class DateField extends React.Component {
       date[1]--; // Months are 0-indexed
       if (value) picker.set('select', date);
     }
-    $(this.date).pickadate({
-      hiddenName: true,
-      format: 'yyyy-mm-dd',
-      onClose: function () {
-        self.props.onChange(self.date.value);
-      }
+
+    load(['a', 'b', 'c'], function(){
+      console.log("X");
     });
-    setValue(this.date.value);
+
+    load('web/picker.js', function(){
+      load('web/picker.date.js', function(){
+        $(self.date).pickadate({
+          hiddenName: true,
+          format: 'yyyy-mm-dd',
+          onClose: function () {
+            self.props.onChange(self.date.value);
+          }
+        });
+        setValue(self.date.value);
+      });
+    });
     // var picker = $(this.date).pickadate('picker');
     // var date = this.date.value.split('-').map(n => parseInt(n));
     // date[1]--; // Months are 0-indexed

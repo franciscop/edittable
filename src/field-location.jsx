@@ -1,13 +1,13 @@
 import React from 'react';
-import loadscript from './loadscript.js';
+import load from './load.js';
 
 export default class Location extends React.Component {
   componentDidMount(){
     var self = this;
-
+    
     var url = 'https://maps.googleapis.com/maps/api/js?key=' + this.props.field.key + '&libraries=places';
 
-    loadscript(url, function loadSearch(){
+    load(url, function loadSearch(){
       if (typeof google === 'undefined' || !google || !google.maps.places) {
         return console.error("Couldn't find Google");
       }
