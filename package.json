@@ -1,0 +1,31 @@
+{
+  "name": "edittable",
+  "version": "0.1.1",
+  "description": "A simple record table for react with editable fields and a REST API interface",
+  "main": "table.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "react-tools": "^0.13.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franciscop/edittable.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/franciscop/edittable/issues"
+  },
+  "homepage": "https://github.com/franciscop/edittable#readme"
+}
