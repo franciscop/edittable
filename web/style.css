@@ -1,15 +1,3 @@
-@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css';
-
-.fa {
-  font: inherit;
-}
-
-.fa::before {
-  font: normal normal normal 16px/1 FontAwesome;
-  margin-right: 10px;
-}
-
-
 html {
   background-color: #edce9e;
   background-size: cover;

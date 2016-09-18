@@ -1,3 +1,13 @@
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css';
+
+.edittable .fa {
+  font: inherit;
+}
+
+.edittable .fa::before {
+  font: normal normal normal 16px/1 FontAwesome;
+}
+
 .edittable {
   border-collapse: collapse;
   border: 3px solid #eee;

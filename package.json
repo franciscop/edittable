@@ -1,8 +1,8 @@
 {
   "name": "edittable",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple record table for react with editable fields and a REST API interface",
-  "main": "table.js",
+  "main": "src/table.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
